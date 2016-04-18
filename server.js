@@ -6,20 +6,36 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var registrationRouter = require("./controllers/registration.js");
+var getContactListRouter = require("./controllers/getContactList.js");
+var directionsRouter = require("./controllers/directions.js");
+var gcmTokenRegistrationRouter = require("./controllers/gcmTokenRegistration.js");
+var pubsub = require("./controllers/journeyPubSub.js");
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;       // set our port
+var port = process.env.PORT;       // set our port
 
 
 //configuring registration router
 app.use('/registration', registrationRouter);
 
+//configuring getContactList router
+app.use('/getContactList', getContactListRouter);
+
+
+//configuring directions api router
+app.use("/getDirections", directionsRouter);
+
+//configuring gcm token registration api
+app.use("/registerGCMToken", gcmTokenRegistrationRouter);
+
+app.use("/pubsub", pubsub);
+
 //connecting with mongodb and starting up the server
-mongoose.connect("mongodb://localhost/trackMe");
+mongoose.connect("mongodb://hammad:hammad@ds017070.mlab.com:17070/followme");
 
 var db = mongoose.connection;
 
